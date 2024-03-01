@@ -8,10 +8,6 @@ type DataType = {
   [key: string]: any;
 };
 
-type TableProps = {
-  data: DataType[];
-};
-
 const UniversalTable: React.FC<{ nameof: string }> = ({ nameof }) => {
   const [data, setData] = useState<DataType[]>([]);
   const [search, setSearch] = useState<string>("");
