@@ -1,5 +1,4 @@
-
-import MainTable from "../components/mainTable"
+import MainTable from "../components/MainTable"
 export default function Table({params}) {
   return (
     <div>

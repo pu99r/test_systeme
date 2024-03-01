@@ -78,3 +78,37 @@ button:hover {
 .edit-table-container button:nth-child(2) {
   margin-right: 10px;
 }
+.home-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.home-container h1 {
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.home-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.home-nav li {
+  margin: 0 10px;
+}
+
+.home-link {
+  text-decoration: none;
+  color: #333;
+  font-size: 1.2rem;
+  transition: color 0.3s ease;
+}
+
+.home-link:hover {
+  color: #007bff; /* цвет при наведении */
+}

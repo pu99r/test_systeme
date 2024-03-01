@@ -14,10 +14,9 @@ const EditTable: React.FC<{
   };
 
   const handleSave = () => {
-    console.log(nameof);
     fetch(`api/${nameof}`, {
       method: "POST",
-      body: JSON.stringify({ [editStringKey]: editedString, id: editId }),
+      body: JSON.stringify({id: editId, [editStringKey]: editedString }),
       headers: {
         "Content-Type": "application/json",
       },
