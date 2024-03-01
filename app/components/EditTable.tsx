@@ -5,7 +5,7 @@ const EditTable: React.FC<{
   editString: string;
   editStringKey: string;
   nameof: string;
-  editId:string;
+  editId: string;
 }> = ({ onClose, editString, editStringKey, nameof, editId }) => {
   const [editedString, setEditedString] = useState(editString);
 
@@ -14,10 +14,10 @@ const EditTable: React.FC<{
   };
 
   const handleSave = () => {
-    console.log(nameof)
+    console.log(nameof);
     fetch(`api/${nameof}`, {
       method: "POST",
-      body: JSON.stringify({ [editStringKey]: editedString, id: editId}),
+      body: JSON.stringify({ [editStringKey]: editedString, id: editId }),
       headers: {
         "Content-Type": "application/json",
       },
@@ -35,10 +35,12 @@ const EditTable: React.FC<{
   };
 
   return (
-    <div>
-      <input type="text" value={editedString} onChange={handleInputChange} />
-      <button onClick={handleSave}>Save</button>
-      <button onClick={onClose}>Exit</button>
+    <div className="edit-table-overlay">
+      <div className="edit-table-container">
+        <input type="text" value={editedString} onChange={handleInputChange} />
+        <button onClick={handleSave}>Save</button>
+        <button onClick={onClose}>Exit</button>
+      </div>
     </div>
   );
 };

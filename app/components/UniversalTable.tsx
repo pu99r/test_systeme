@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import EditTable from "./editTable"
+import EditTable from "./editTable";
 
 type DataType = {
   id: number;
@@ -12,22 +12,29 @@ type TableProps = {
 
 const UniversalTable: React.FC<TableProps> = ({ data, nameof }) => {
   const [search, setSearch] = useState("");
+  const [activeFilter, setActiveFilter] = useState("all");
 
   const [editId, setEditId] = useState<number | null>(null);
   const [editString, setEditString] = useState<string | null>(null);
   const [editStringKey, setEditStringKey] = useState<string | null>(null);
   const [isEditOpen, setisEditOpen] = useState(false);
 
-
   const filteredData = data.filter((item) =>
-    Object.values(item).some(
-      (value) =>
-        typeof value === "string" &&
-        value.toLowerCase().includes(search.toLowerCase())
-    )
-  );
+  (Object.values(item).some(
+    (value) =>
+      typeof value === "string" &&
+      value.toLowerCase().includes(search.toLowerCase())
+  )) &&
+  (activeFilter === "all" ||
+    (activeFilter === "yes" && Object.values(item).some(
+      (value) => value === true || (typeof value === "string" && value.toLowerCase() === "yes")
+    )) ||
+    (activeFilter === "no" && Object.values(item).some(
+      (value) => value === false || (typeof value === "string" && value.toLowerCase() === "no")
+    )))
+);
 
-  function formatObject(obj) {
+function formatObject(obj: Record<string, any>): string {
     let formattedString = "";
     for (const key in obj) {
       if (Object.hasOwnProperty.call(obj, key)) {
@@ -39,7 +46,7 @@ const UniversalTable: React.FC<TableProps> = ({ data, nameof }) => {
     return formattedString;
   }
 
-  function formatDate(value) {
+  function formatDate(value: string): string {
     const dateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{1,3}Z$/;
     if (dateRegex.test(value)) {
       const date = new Date(value);
@@ -54,7 +61,7 @@ const UniversalTable: React.FC<TableProps> = ({ data, nameof }) => {
   }
 
   const handleEditClick = (id: number) => {
-    openEdit()
+    openEdit();
     const item = filteredData.find((item) => item.id === id);
     if (item) {
       const firstRow = Object.entries(item)
@@ -68,7 +75,9 @@ const UniversalTable: React.FC<TableProps> = ({ data, nameof }) => {
             return formatDate(value);
           }
         })[0];
-      const firstRowKey = Object.keys(item).find((key) => item[key] === firstRow);
+      const firstRowKey = Object.keys(item).find(
+        (key) => item[key] === firstRow
+      );
       setEditString(firstRow);
       setEditStringKey(firstRowKey);
     }
@@ -86,6 +95,14 @@ const UniversalTable: React.FC<TableProps> = ({ data, nameof }) => {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
+      <select
+        value={activeFilter}
+        onChange={(e) => setActiveFilter(e.target.value)}
+      >
+        <option value="all">All</option>
+        <option value="yes">Yes</option>
+        <option value="no">No</option>
+      </select>
       <table>
         <thead>
           <tr>
