@@ -77,18 +77,16 @@ const UniversalTable: React.FC<{ nameof: string }> = ({ nameof }) => {
     setEditId(id);
     const item = filteredData.find((item) => item.id === id);
     if (item) {
-      let firstRow = Object.entries(item)
-        .filter(([key]) => key !== "id")
-        .map(([key, value]) => {
-          if (typeof value === "string") {
-            return value;
-          }
-        })[0];
-      setEditString(firstRow);
-      let firstRowKey = Object.keys(item).find(
-        (key) => item[key] === firstRow
-      );
-      setEditStringKey(firstRowKey);
+      let firstRowEntry = Object.entries(item)
+        .find(([key]) => key !== "id");
+  
+      if (firstRowEntry) {
+        const [firstRowKey, firstRowValue] = firstRowEntry;
+        if (typeof firstRowValue === "string") {
+          setEditString(firstRowValue);
+          setEditStringKey(firstRowKey);
+        }
+      }
     }
   };
   const openEdit = () => setIsEditOpen(true);
@@ -141,10 +139,10 @@ const UniversalTable: React.FC<{ nameof: string }> = ({ nameof }) => {
       {isEditOpen && (
         <EditTable
           onClose={closeEdit}
-          editId={editId}
-          editString={editString}
-          editStringKey={editStringKey}
-          nameof={nameof}
+          editId={editId !== null ? editId.toString() : ''}
+          editString={editString !== null ? editString.toString() : ''}
+          editStringKey={editStringKey !== null ? editStringKey.toString() : ''}
+          nameof={nameof !== null ? nameof.toString() : ''}
         />
       )}
     </div>

@@ -1,19 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "./database";
 import { promisify } from "util";
-
-const runQuery = promisify(db.run.bind(db));
-
+const run = (query: string, params: any, callback: Function) => {
+  db.run(query, params, callback);
+};
+const runQuery = promisify(run);
+interface Item {
+  id: number;
+  name: string;
+  active: boolean;
+}
 export async function GET(req: Request) {
   try {
-    const items = await new Promise((resolve, reject) => {
+    const items = await new Promise<Item[]>((resolve, reject) => {
       db.all("SELECT * FROM items", (err, rows) => {
         if (err) {
           reject(err);
         } else {
-          const itemsWithBoolean = rows.map(row => ({
-            ...row,
-            active: row.active === 1
+          const itemsWithBoolean = rows.map((row: any) => ({
+            ...(row as Item),
+            active: row.active === 1,
           }));
           resolve(itemsWithBoolean);
         }
@@ -21,8 +27,8 @@ export async function GET(req: Request) {
     });
 
     return NextResponse.json(items);
-  } catch (error) {
-    return NextResponse.error(error.message, { status: 500 });
+  } catch {
+    return NextResponse.error();
   }
 }
 
@@ -35,10 +41,10 @@ export async function POST(req: Request) {
       WHERE id = ?
     `;
 
-    await runQuery(updateQuery, [description, id]);
+    await runQuery(updateQuery, { 1: description, 2: id });
 
     return NextResponse.json({ message: "Data updated successfully" });
   } catch (error) {
-    return NextResponse.error(error.message, { status: 500 });
+    return NextResponse.error();
   }
 }
